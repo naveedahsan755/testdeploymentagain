@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './signup.css';
+@import './svg.css';
+
+.floating-input > input::placeholder {
+  color: transparent;
+}
+
+.floating-input > input:focus,
+.floating-input > input:not(:placeholder-shown) {
+  @apply pt-8;
+}
+
+.floating-input > input:focus ~ label,
+.floating-input > input:not(:placeholder-shown) ~ label {
+  @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
+}
