@@ -1,35 +1,35 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("./db");
-const User = require("./User");
-const BusinessCard = require("./BusinessCard");
-const Testimonial = require("./Testimonial");
+const { DataTypes } = require('sequelize');
+const sequelize = require('./db');
+const User = require('./User');
+const BusinessCard = require('./BusinessCard');
+const Testimonial = require('./Testimonial');
 
-const Business = sequelize.define("Business", {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  address: {
-    type: DataTypes.STRING,
-  },
-  picture: {
-    type: DataTypes.STRING,
-  },
-  video: {
-    type: DataTypes.STRING,
-  },
-  about: {
-    type: DataTypes.TEXT,
-  },
+const Business = sequelize.define('Business', {
+  // name: {
+  //   type: DataTypes.STRING,
+  //   allowNull: false
+  // },
+  // address: {
+  //   type: DataTypes.STRING
+  // },
+  // picture: {
+  //   type: DataTypes.STRING
+  // },
+  // video: {
+  //   type: DataTypes.STRING
+  // },
+  // about: {
+  //   type: DataTypes.TEXT
+  // },
   link: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING
   },
   varifiedBy: {
-    type: DataTypes.INTEGER,
-  },
+    type: DataTypes.INTEGER
+  }
 });
 
-Business.hasMany(User, { onDelete: "cascade" });
+Business.hasOne(User, { onDelete: 'cascade' });
 User.belongsTo(Business);
 
 Business.hasOne(BusinessCard);
