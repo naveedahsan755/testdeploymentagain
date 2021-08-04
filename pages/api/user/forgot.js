@@ -1,6 +1,7 @@
 const User = require('../../../models/User');
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
+const randomString = require('../../../utils/random');
 
 const sendEmail = require('../../../utils/sendMail');
 
@@ -29,7 +30,7 @@ const handler = async (req, res) => {
 
       const encNewPassword = await bcrypt.hash(newPassword, 12);
 
-      await user.update({ password: newEncPassword });
+      await user.update({ password: encNewPassword });
 
       await sendEmail(email, 'New Password', `<p>Your new password is: ${newPassword}</p>`);
 

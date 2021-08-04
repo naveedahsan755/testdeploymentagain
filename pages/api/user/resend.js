@@ -1,5 +1,6 @@
 const User = require('../../../models/User');
 const Joi = require('joi');
+const sendEmail = require('../../../utils/sendMail');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
@@ -26,7 +27,7 @@ const handler = async (req, res) => {
       await user.update({ varificationCode });
 
       sendEmail(
-        email,
+        user.email,
         'Account Varification',
         `<p>Your account validation code is: ${varificationCode}</p>`
       );

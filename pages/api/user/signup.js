@@ -20,12 +20,12 @@ const handler = async (req, res) => {
         businessName: Joi.any().when('accountType', {
           is: 'Business',
           then: Joi.string().required(),
-          otherwise: Joi.string()
+          otherwise: Joi.string().allow(null).allow('').optional()
         }),
         website: Joi.any().when('accountType', {
           is: 'Business',
           then: Joi.string().required().uri(),
-          otherwise: Joi.string().uri()
+          otherwise: Joi.string().allow(null).allow('').optional().uri()
         })
       });
       return schema.validate(data);
