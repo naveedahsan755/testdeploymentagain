@@ -17,11 +17,6 @@ const handler = async (req, res) => {
         phone: Joi.string().required(),
         password: Joi.string().required(),
         accountType: Joi.string().required(),
-        businessName: Joi.any().when('accountType', {
-          is: 'Business',
-          then: Joi.string().required(),
-          otherwise: Joi.string().allow(null).allow('').optional()
-        }),
         website: Joi.any().when('accountType', {
           is: 'Business',
           then: Joi.string().required().uri(),
@@ -35,7 +30,7 @@ const handler = async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { username, email, phone, password, accountType, businessName, website } = req.body;
+    const { username, email, phone, password, accountType, website } = req.body;
 
     let user = null;
 
@@ -51,7 +46,9 @@ const handler = async (req, res) => {
       }
 
       const encPassword = await bcrypt.hash(password, 12);
-      const varificationCode = Math.round(Math.random() * 1000000).toString();
+      let varificationCode = Math.round(Math.random() * 1000000).toString();
+      while (varificationCode.length < 6) varificationCode += '0';
+
       const newUser = await User.create({
         username,
         email,
@@ -62,15 +59,9 @@ const handler = async (req, res) => {
       });
 
       if (accountType === 'Business') {
-        let newBusiness = await Business.findOne({
-          where: { name: businessName }
+        const newBusiness = await Business.create({
+          link: website
         });
-        if (!newBusiness) {
-          newBusiness = await Business.create({
-            name: businessName,
-            link: website
-          });
-        }
         await newUser.setBusiness(newBusiness);
       }
 

@@ -1,0 +1,44 @@
+const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+
+const Testimonial = require('../../../../models/Testimonial');
+
+const handler = async (req, res) => {
+  if (req.method === 'POST') {
+    const validateDeletetestimonial = (data) => {
+      const schema = Joi.object({
+        testimonialId: Joi.number().integer().required()
+      });
+      return schema.validate(data);
+    };
+
+    const { error } = validateDeletetestimonial(req.body);
+
+    if (error)
+      return res.status(400).json({ error: true, message: error.details[0].message, data: [] });
+
+    try {
+      if (!req.headers.authorization) {
+        throw new Error('Please Login');
+      }
+      const { username } = jwt.verify(
+        req.headers.authorization.split(' ')[1],
+        process.env.SECRET_KEY
+      );
+
+      const testimonial = await Testimonial.findOne({ where: { id: req.body.testimonialId } });
+
+      if (!testimonial) throw new Error('No testimonial found');
+
+      await testimonial.destroy();
+
+      res.status(201).json({ error: false, message: 'success', data: [] });
+    } catch (err) {
+      res.status(422).json({ error: true, message: err.message, data: [] });
+    }
+  } else {
+    res.status(404).end('Page Not Found');
+  }
+};
+
+export default handler;

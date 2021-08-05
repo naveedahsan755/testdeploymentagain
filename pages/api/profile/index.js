@@ -1,6 +1,7 @@
 const User = require('../../../models/User');
 const Video = require('../../../models/Video');
 const Testimonial = require('../../../models/Testimonial');
+const BusinessCard = require('../../../models/BusinessCard');
 const jwt = require('jsonwebtoken');
 
 const handler = async (req, res) => {
@@ -34,9 +35,9 @@ const handler = async (req, res) => {
       let response = {};
 
       if (user.accountType === 'Business') {
-        const businessId = user.BusinessId;
+        const business = await user.getBusiness();
         let testimonials = await Testimonial.findAll({
-          where: { BusinessId: businessId }
+          where: { BusinessId: business.id }
         });
         testimonials = testimonials.map((testimonial) => {
           return {
@@ -46,7 +47,7 @@ const handler = async (req, res) => {
           };
         });
         const findBusinessCard = await BusinessCard.findOne({
-          where: { BusinessId: businessId }
+          where: { BusinessId: business.id }
         });
         response = {
           username,

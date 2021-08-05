@@ -29,8 +29,8 @@ const Business = sequelize.define('Business', {
   }
 });
 
-Business.hasOne(User, { onDelete: 'cascade' });
-User.belongsTo(Business);
+// Business.hasOne(User, { onDelete: 'cascade' });
+// User.belongsTo(Business);
 
 Business.hasOne(BusinessCard);
 BusinessCard.belongsTo(Business);
