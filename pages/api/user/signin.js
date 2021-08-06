@@ -39,7 +39,7 @@ const handler = async (req, res) => {
         expiresIn: '1h'
       });
 
-      await user.update({ token });
+      // await user.update({ token });
 
       res
         .status(200)

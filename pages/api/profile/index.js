@@ -18,67 +18,43 @@ const handler = async (req, res) => {
         throw new Error('Please Login');
       }
 
-      if (!user.token) throw new Error('Please Login');
+      // if (!user.token) throw new Error('Please Login');
 
-      const rating = user.avgRating;
-      const views = user.totalViews;
       let following = await user.getFollower();
       let followed = await user.getFollowed();
-      following = following.length;
-      followed = followed.length;
-      const about = user.about;
-      const picture = user.picture;
       const vids = await Video.findAll({ where: { UserId: user.id } });
-      const accessible = user.accessible;
-      const videos = vids.map((vid) => vid.name);
 
-      let response = {};
+      let response = {
+        username,
+        rating: user.avgRating,
+        views: user.totalViews,
+        following: following.length,
+        followed: followed.length,
+        about: user.about,
+        picture: user.picture,
+        accessible: user.accessible,
+        videos: vids.map((vid) => vid.name)
+      };
+
+      if (user.showPhone) response.phone = user.phone;
 
       if (user.accountType === 'Business') {
         const business = await user.getBusiness();
-        let testimonials = await Testimonial.findAll({
-          where: { BusinessId: business.id }
-        });
-        testimonials = testimonials.map((testimonial) => {
-          return {
-            clientName: testimonial.clientName,
-            testimonial: testimonial.testimonial,
-            createdAt: testimonial.createdAt
+        let testimonials = await business.getTestimonials();
+        response.testimonials = testimonials;
+
+        const findBusinessCard = await business.getBusinessCard();
+
+        if (findBusinessCard) {
+          let businessCard = {
+            ownderName: findBusinessCard.ownerName,
+            email: findBusinessCard.email,
+            website: findBusinessCard.website
           };
-        });
-        const findBusinessCard = await BusinessCard.findOne({
-          where: { BusinessId: business.id }
-        });
-        response = {
-          username,
-          rating,
-          views,
-          following,
-          followed,
-          about,
-          accessible,
-          picture,
-          videos,
-          testimonials,
-          businessCard: {
-            ownderName: findBusinessCard ? findBusinessCard.ownerName : null,
-            email: findBusinessCard ? findBusinessCard.email : null,
-            phone: findBusinessCard ? findBusinessCard.phoneNumber : null,
-            website: findBusinessCard ? findBusinessCard.website : null
-          }
-        };
-      } else {
-        response = {
-          username,
-          rating,
-          views,
-          following,
-          followed,
-          about,
-          accessible,
-          picture,
-          videos
-        };
+
+          if (showPhone) response.BusinessCard.phone = phone;
+          response.businessCard = businessCard;
+        }
       }
 
       res.status(200).json({

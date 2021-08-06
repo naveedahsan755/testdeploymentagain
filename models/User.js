@@ -28,18 +28,18 @@ const User = sequelize.define('User', {
   varificationCode: {
     type: DataTypes.STRING
   },
-  // forgotpassConfirmed: {
-  //   type: DataTypes.BOOLEAN,
-  //   defaultValue: false,
-  // },
   accountType: {
     type: DataTypes.STRING
   },
-  // address: {
-  //   type: DataTypes.STRING,
-  // },
+  address: {
+    type: DataTypes.STRING
+  },
   phoneNumber: {
     type: DataTypes.STRING
+  },
+  showPhone: {
+    type: DataTypes.STRING,
+    defaultValue: true
   },
   picture: {
     type: DataTypes.STRING,
@@ -90,10 +90,8 @@ const User = sequelize.define('User', {
   },
   isDeleted: {
     type: DataTypes.BOOLEAN
-  },
-  token: {
-    type: DataTypes.STRING
   }
+  // token: DataTypes.ARRAY(DataTypes.STRING)
 });
 
 User.hasOne(Business);
