@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const Video = require('./Video');
+const Business = require('./Business');
 
 const User = sequelize.define('User', {
   name: {
@@ -102,6 +103,9 @@ User.belongsToMany(User, {
   foreignKey: 'followedId',
   through: 'following'
 });
+
+User.hasOne(Business);
+Business.belongsTo(User);
 
 User.hasMany(Video);
 Video.belongsTo(User);

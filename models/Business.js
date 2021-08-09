@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
-const User = require('./User');
 const BusinessCard = require('./BusinessCard');
 const Testimonial = require('./Testimonial');
 
@@ -12,9 +11,6 @@ const Business = sequelize.define('Business', {
     type: DataTypes.INTEGER
   }
 });
-
-Business.hasOne(User, { onDelete: 'cascade' });
-User.belongsTo(Business);
 
 Business.hasOne(BusinessCard);
 BusinessCard.belongsTo(Business);
