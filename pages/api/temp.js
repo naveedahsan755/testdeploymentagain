@@ -6,6 +6,7 @@ const BusinessCard = require('../../models/BusinessCard');
 const Testimonial = require('../../models/Testimonial');
 const Video = require('../../models/Video');
 const VideoCategory = require('../../models/VideoCategory');
+const Session = require('../../models/Session');
 
 const sequelize = require('../../models/db');
 

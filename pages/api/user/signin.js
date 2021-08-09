@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../../models/User');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
+
+const User = require('../../../models/User');
+const Session = require('../../../models/Session');
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
@@ -28,16 +30,16 @@ const handler = async (req, res) => {
       }
 
       if (!user.emailConfirmed) {
-        return res.status(405).json({ error: true, message: 'Validation failed', data: [] });
+        return res
+          .status(405)
+          .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
         // throw new Error('Please confirm email.');
       }
 
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-        return res
-          .status(405)
-          .json({ error: true, message: 'Confirmation code sent to email address', data: [] });
+        return res.status(405).json({ error: true, message: 'Validation failed', data: [] });
         // throw new Error('User failed to login.');
       }
 
@@ -45,7 +47,12 @@ const handler = async (req, res) => {
         expiresIn: '1h'
       });
 
-      // await user.update({ token });
+      await Session.create({
+        userId: user.id,
+        username: user.username,
+        sessionId: user.varificationCode,
+        connected: false
+      });
 
       res
         .status(200)
