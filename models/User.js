@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const Video = require('./Video');
-const Business = require('./Business');
 
 const User = sequelize.define('User', {
   name: {
@@ -91,11 +90,7 @@ const User = sequelize.define('User', {
   isDeleted: {
     type: DataTypes.BOOLEAN
   }
-  // token: DataTypes.ARRAY(DataTypes.STRING)
 });
-
-User.hasOne(Business);
-Business.belongsTo(User);
 
 User.belongsToMany(User, {
   as: 'Follower',
